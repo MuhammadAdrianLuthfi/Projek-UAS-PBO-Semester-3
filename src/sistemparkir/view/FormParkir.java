@@ -26,25 +26,38 @@ public class FormParkir extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtPlat = new javax.swing.JTextField();
+        txtGolongan = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnMasuk = new javax.swing.JButton();
+        btnBatal = new javax.swing.JButton();
+        btnKeluar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Parkir Masuk");
+        jLabel1.setText("Form Parkir");
 
         jLabel2.setText("Plat Nomor");
 
         jLabel3.setText("Golongan");
 
-        jButton1.setText("Buka");
+        btnMasuk.setText("Masuk");
+        btnMasuk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMasukActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Cancel");
+        btnBatal.setText("Batal");
+        btnBatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBatalActionPerformed(evt);
+            }
+        });
+
+        btnKeluar.setText("Keluar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -59,13 +72,19 @@ public class FormParkir extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jButton1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
-                            .addComponent(jButton2))
-                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(38, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(14, 14, 14)
+                            .addComponent(btnMasuk)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnKeluar)
+                            .addGap(18, 18, 18))
+                        .addComponent(txtPlat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                        .addComponent(txtGolongan, javax.swing.GroupLayout.Alignment.LEADING)))
+                .addContainerGap(41, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBatal)
+                .addGap(110, 110, 110))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -74,21 +93,31 @@ public class FormParkir extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPlat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(89, 89, 89)
+                    .addComponent(txtGolongan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(29, 29, 29))
+                    .addComponent(btnMasuk)
+                    .addComponent(btnKeluar))
+                .addGap(18, 18, 18)
+                .addComponent(btnBatal)
+                .addGap(47, 47, 47))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMasukActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnMasukActionPerformed
+
+    private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
+      dispose();// TODO add your handling code here:
+    }//GEN-LAST:event_btnBatalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,12 +155,13 @@ public class FormParkir extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnBatal;
+    private javax.swing.JButton btnKeluar;
+    private javax.swing.JButton btnMasuk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField txtGolongan;
+    private javax.swing.JTextField txtPlat;
     // End of variables declaration//GEN-END:variables
 }
