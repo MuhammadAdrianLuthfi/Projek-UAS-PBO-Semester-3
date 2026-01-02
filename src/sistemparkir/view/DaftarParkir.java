@@ -17,7 +17,7 @@ import sistemparkir.model.Parkir;
  * @author 62878
  */
 public class DaftarParkir extends javax.swing.JFrame {
-    ParkirDAO kdao = new ParkirDAO();
+    ParkirDAO pdao = new ParkirDAO();
     TableRowSorter<TableModel> sorter;
      
     public DaftarParkir() {
@@ -27,26 +27,27 @@ public class DaftarParkir extends javax.swing.JFrame {
     public void loadData(){
         List<Parkir> list = pdao.getAll();
         DefaultTableModel model = new DefaultTableModel(
-        new Object[]{"plat_nomor", "golongan", "jenis", "tarif_per_jam"}, 0);
+        new Object[]{"ID", "Plat Nomor", "Golongan", "Jenis", "Tarif"}, 0);
         tableParkir.setModel(model);
-        for(Parkir par list){
+        for(Parkir par : list){
             model.addRow(new Object[]{
-                par.getPlatNomor(),
-                par.getGolongan(),
-                par.getJenis(),
-                par.getTarifPerjam(),
+                par.getKendaraan(),
+                par.getWaktuMasuk(),
+                par.getWaktuKeluar(),
+                par.getTotalBayar(),
+                par.getId(),
                 
         });
         tableParkir.setModel(model);
         sorter = new TableRowSorter<TableModel>(model);
         tableParkir.setRowSorter(sorter);
     }
-     private Integer getSelectedId() {
+    private Integer getSelectedId() {
         int row = tableParkir.getSelectedRow();
         if (row == -1)
             return null;
         return Integer.parseInt(tableParkir.getValueAt(row, 0).toString());
-     }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -181,7 +182,7 @@ public class DaftarParkir extends javax.swing.JFrame {
         if (JOptionPane.showConfirmDialog(
             this, "Hapus data ini?", "Konfirmasi",
             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            kdao.delete(ID);
+            pdao.delete(ID);
             loadData();
         }        // TODO add your handling code here:
     }//GEN-LAST:event_btnHapusActionPerformed
