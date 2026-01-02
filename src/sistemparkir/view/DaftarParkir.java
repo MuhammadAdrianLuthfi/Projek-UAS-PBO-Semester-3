@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import sistemparkir.dao.ParkirDAO;
+import sistemparkir.model.Kendaraan;
 import sistemparkir.model.Parkir;
 /**
  *
@@ -25,17 +26,16 @@ public class DaftarParkir extends javax.swing.JFrame {
       loadData();  
     }
     public void loadData(){
-        List<Parkir> list = pdao.getAll();
+        List<Kendaraan> list = pdao.getAll();
         DefaultTableModel model = new DefaultTableModel(
         new Object[]{"ID", "Plat Nomor", "Golongan", "Jenis", "Tarif"}, 0);
         tableParkir.setModel(model);
-        for(Parkir par : list){
+        for(Kendaraan par : list){
             model.addRow(new Object[]{
-                par.getKendaraan(),
-                par.getWaktuMasuk(),
-                par.getWaktuKeluar(),
-                par.getTotalBayar(),
-                par.getId(),
+                par.getPlatNomor(),
+                par.getJenis(),
+                par.getGolongan(),
+                
                 
         });
         tableParkir.setModel(model);
