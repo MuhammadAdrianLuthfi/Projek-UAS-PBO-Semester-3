@@ -9,8 +9,8 @@ package sistemparkir.model;
  * @author 62878
  */
 public class Motor extends Kendaraan {
-    public Motor(String platNomor) {
-        super(platNomor, Jeniskendaraan.MOTOR, 2);
+    public Motor(int idKendaraan, String platNomor) {
+        super(idKendaraan, platNomor, Jeniskendaraan.MOTOR, 2);
     }
 
     @Override

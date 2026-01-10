@@ -9,8 +9,8 @@ package sistemparkir.model;
  * @author 62878
  */
 public class Truck extends Kendaraan {
-    public Truck(String platNomor) {
-        super(platNomor, Jeniskendaraan.TRUCK, 4);
+    public Truck(int idKendaraan, String platNomor) {
+        super(idKendaraan,platNomor, Jeniskendaraan.TRUCK, 4);
     }
 
     @Override

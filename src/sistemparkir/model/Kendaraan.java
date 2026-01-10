@@ -9,18 +9,23 @@ package sistemparkir.model;
  * @author 62878
  */
 public abstract class Kendaraan {
+    private int idKendaraan;
     private String platNomor;
     private Jeniskendaraan jenis;
     private int golongan;
 
-    public Kendaraan(String platNomor, Jeniskendaraan jenis, int golongan) {
+ 
+    public Kendaraan(int idKendaraan, String platNomor, Jeniskendaraan jenis, int golongan) {
+        this.idKendaraan=idKendaraan;
         this.platNomor = platNomor;
         this.jenis = jenis;
         this.golongan = golongan;
     }
 
     public abstract double hitungTarif(int lamaParkir);
-
+    public int getIdKendaraan(){
+        return idKendaraan;
+    }
     public String getPlatNomor() { 
         return platNomor; 
     }

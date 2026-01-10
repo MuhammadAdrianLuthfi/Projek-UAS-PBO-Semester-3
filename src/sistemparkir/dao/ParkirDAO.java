@@ -39,14 +39,26 @@ public class ParkirDAO {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Kendaraan k = null;
+                int id = rs.getInt("id");
                 String plat = rs.getString("plat_nomor");
                 int gol = rs.getInt("golongan");
                 
                 switch (gol) {
-                    case 1 -> k = new Mahasiswa(plat);
-                    case 2 -> k = new Motor(plat);
-                    case 3 -> k = new Mobil(plat);
-                    case 4 -> k = new Truck(plat);
+                    case 1:
+                    k = new Mahasiswa(id,plat);
+                    break;
+                case 2:
+                    k = new Motor(id,plat);
+                    break;
+                case 3:
+                    k = new Mobil(id,plat);
+                    break;
+                case 4:
+                    k = new Truck(id,plat);
+                    break;
+                default:
+                    k = null;
+                    break;
                 }
                 
                 if (k != null) {

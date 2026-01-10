@@ -9,8 +9,8 @@ package sistemparkir.model;
  * @author 62878
  */
 public class Mobil extends Kendaraan {
-    public Mobil(String platNomor) {
-        super(platNomor, Jeniskendaraan.MOBIL, 3);
+    public Mobil(int idKendaraan,String platNomor) {
+        super(idKendaraan, platNomor, Jeniskendaraan.MOBIL, 3);
     }
 
     @Override

@@ -12,7 +12,6 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import sistemparkir.dao.ParkirDAO;
 import sistemparkir.model.Kendaraan;
-import sistemparkir.model.Parkir;
 /**
  *
  * @author 62878
@@ -27,20 +26,28 @@ public class DaftarParkir extends javax.swing.JFrame {
     }
     private Integer getSelectedId() {
         int row = tableParkir.getSelectedRow();
-        if (row == -1)
+        if (row == -1){
             return null;
-        return Integer.parseInt(tableParkir.getValueAt(row, 0).toString());
+        }
+        int modelRow = tableParkir.convertRowIndexToModel(row);
+        Object idValue = tableParkir.getModel().getValueAt(modelRow, 0);
+    
+        if (idValue != null) {
+            return Integer.parseInt(idValue.toString());
+        }
+        return null;
     }
     public void loadData(){
         List<Kendaraan> list = pdao.getAll();
         DefaultTableModel model = new DefaultTableModel(
         new Object[]{"ID", "Plat Nomor", "Golongan", "Jenis", "Tarif"}, 0);
         tableParkir.setModel(model);
-        for(Kendaraan par : list){
+        for(Kendaraan ken : list){
             model.addRow(new Object[]{
-                par.getPlatNomor(),
-                par.getJenis(),
-                par.getGolongan(),
+                ken.getIdKendaraan(),
+                ken.getPlatNomor(),
+                ken.getJenis(),
+                ken.getGolongan(),
                 
                 
         });
@@ -188,7 +195,7 @@ public class DaftarParkir extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Pilih data dulu!");
             return;
         }
-
+        
         if (JOptionPane.showConfirmDialog(
             this, "Hapus data ini?", "Konfirmasi",
             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -216,36 +223,29 @@ public class DaftarParkir extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCariActionPerformed
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+    /* Set the Nimbus look and feel */
+    try {
+        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            if ("Nimbus".equals(info.getName())) {
+                javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                break;
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DaftarKucing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DaftarKucing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DaftarKucing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DaftarKucing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new DaftarParkir().setVisible(true);
-            }
-        });
+    } catch (ClassNotFoundException ex) {
+        java.util.logging.Logger.getLogger(DaftarParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (InstantiationException ex) {
+        java.util.logging.Logger.getLogger(DaftarParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+        java.util.logging.Logger.getLogger(DaftarParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        java.util.logging.Logger.getLogger(DaftarParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            new DaftarParkir().setVisible(true);
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCari;
