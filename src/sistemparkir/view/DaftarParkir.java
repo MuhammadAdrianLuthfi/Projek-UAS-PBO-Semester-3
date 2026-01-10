@@ -25,6 +25,12 @@ public class DaftarParkir extends javax.swing.JFrame {
       initComponents();
       loadData();  
     }
+    private Integer getSelectedId() {
+        int row = tableParkir.getSelectedRow();
+        if (row == -1)
+            return null;
+        return Integer.parseInt(tableParkir.getValueAt(row, 0).toString());
+    }
     public void loadData(){
         List<Kendaraan> list = pdao.getAll();
         DefaultTableModel model = new DefaultTableModel(
@@ -42,13 +48,8 @@ public class DaftarParkir extends javax.swing.JFrame {
         sorter = new TableRowSorter<TableModel>(model);
         tableParkir.setRowSorter(sorter);
     }
-    private Integer getSelectedId() {
-        int row = tableParkir.getSelectedRow();
-        if (row == -1)
-            return null;
-        return Integer.parseInt(tableParkir.getValueAt(row, 0).toString());
-    }
 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -68,6 +69,12 @@ public class DaftarParkir extends javax.swing.JFrame {
         btnUbah = new javax.swing.JButton();
 
         jLabel1.setText("Data Parkir");
+
+        txtCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCariActionPerformed(evt);
+            }
+        });
 
         tableParkir.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -110,8 +117,8 @@ public class DaftarParkir extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -160,21 +167,24 @@ public class DaftarParkir extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
-       String text = txtCari.getText(); 
+        String text = txtCari.getText(); 
+            if (sorter == null) {
+            return; 
+            }
             if(text.length() == 0) {
                 sorter.setRowFilter(null);
             } else {
-            try {
-                sorter.setRowFilter(RowFilter.regexFilter(text));
-            } catch(PatternSyntaxException pse) {
-                System.out.println("Bad regex pattern");
-            }
-        }        
+                try {
+                    sorter.setRowFilter(RowFilter.regexFilter(text));
+                } catch(PatternSyntaxException pse) {
+                    System.out.println("Bad regex pattern");
+                }
+            }        
     }//GEN-LAST:event_btnCariActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
-        Integer ID = getSelectedId();
-        if (ID == null) {
+        Integer id = getSelectedId();
+        if (id == null) {
             JOptionPane.showMessageDialog(this, "Pilih data dulu!");
             return;
         }
@@ -182,26 +192,60 @@ public class DaftarParkir extends javax.swing.JFrame {
         if (JOptionPane.showConfirmDialog(
             this, "Hapus data ini?", "Konfirmasi",
             JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            pdao.delete(ID);
+            pdao.delete(id);
             loadData();
         }        // TODO add your handling code here:
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
        Integer id = getSelectedId();
-    if (id == null) {
-    JOptionPane.showMessageDialog(this, "Pilih data dulu!");
-    return;
-    }
-    FormParkir fp = new FormParkir(this, id);
-    fp.setLocationRelativeTo(this);
-    fp.setVisible(true); // TODO add your handling code here:
+        if (id == null) {
+            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+            return;
+        }
+        FormParkir fp = new FormParkir(this, id);
+        fp.setLocationRelativeTo(this);
+        fp.setVisible(true); // TODO add your handling code here:
     }//GEN-LAST:event_btnUbahActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
        loadData(); // TODO add your handling code here:
     }//GEN-LAST:event_btnRefreshActionPerformed
 
+    private void txtCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCariActionPerformed
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(DaftarKucing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(DaftarKucing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(DaftarKucing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DaftarKucing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new DaftarParkir().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCari;
