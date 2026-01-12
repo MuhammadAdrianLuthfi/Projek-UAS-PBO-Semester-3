@@ -27,40 +27,36 @@ public class FormPembayaran extends javax.swing.JFrame {
     /**
      * Creates new form FormPembayaran
      */
-    public FormPembayaran() {
-        initComponents();
-        this.idDipilih = idDipilih;
-        tampilkanDataDanHitung();
-    }
-    private void tampilkanDataDanHitung() {
+    public FormPembayaran(Integer id) {
+    initComponents();
+    this.idDipilih = id; // Pastikan id dari DaftarParkir masuk ke sini
+    tampilkanDataDanHitung();
+}
+
+private void tampilkanDataDanHitung() {
     try {
-        String sql = "SELECT * FROM parkir WHERE id = '" + idDipilih + "'";
-        Statement st = kon.createStatement();
-        ResultSet rs = st.executeQuery(sql);
+        // Gunakan PreparedStatement agar lebih aman
+        String sql = "SELECT * FROM parkir WHERE id = ?";
+        PreparedStatement st = kon.prepareStatement(sql);
+        st.setInt(1, idDipilih);
+        ResultSet rs = st.executeQuery();
 
         if (rs.next()) {
-            String plat = rs.getString("no_plat");
-            String jamMasukStr = rs.getString("jam_masuk"); 
+            txtPlat.setText(rs.getString("no_plat"));
+            txtMasuk.setText(rs.getString("jam_masuk"));
+            txtGol.setText(rs.getString("golongan")); // Isi field golongan yang kosong tadi
             int tarifPerJam = rs.getInt("tarif");
 
-            txtPlat.setText(plat);
-            txtMasuk.setText(jamMasukStr);
-
             LocalDateTime sekarang = LocalDateTime.now();
-            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String jamKeluarStr = sekarang.format(format);
-            txtKeluar.setText(jamKeluarStr);
-
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime waktuMasuk = LocalDateTime.parse(jamMasukStr, dtf);
-            
+            txtKeluar.setText(sekarang.format(dtf));
+
+            LocalDateTime waktuMasuk = LocalDateTime.parse(rs.getString("jam_masuk"), dtf);
             long durasiMenit = java.time.Duration.between(waktuMasuk, sekarang).toMinutes();
-            long durasiJam = (long) Math.ceil(durasiMenit / 60.0); 
-            
+            long durasiJam = (long) Math.ceil(durasiMenit / 60.0);
             if (durasiJam <= 0) durasiJam = 1;
 
             long totalBayar = durasiJam * tarifPerJam;
-
             txtLama.setText(durasiJam + " Jam");
             txtTarif.setText(String.valueOf(totalBayar));
         }
@@ -240,17 +236,18 @@ public class FormPembayaran extends javax.swing.JFrame {
 
     private void btnSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelesaiActionPerformed
     try {
-        String sql = "UPDATE parkir SET jam_keluar=NOW(), status='Keluar' WHERE id='" + idKendaraan + "'";
+        // Gunakan idDipilih, bukan idKendaraan (variabel tidak ada)
+        String sql = "UPDATE parkir SET jam_keluar=NOW(), status='Keluar' WHERE id=?";
         PreparedStatement ps = kon.prepareStatement(sql);
+        ps.setInt(1, idDipilih);
         ps.executeUpdate();
 
-        JOptionPane.showMessageDialog(this, "Pembayaran Berhasil. Kendaraan Silakan Keluar.");
-        
+        JOptionPane.showMessageDialog(this, "Pembayaran Berhasil!");
         this.dispose(); 
-        
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Gagal Update: " + e.getMessage());
-    }        // TODO add your handling code here:
+    }
+}// TODO add your handling code here:
     }//GEN-LAST:event_btnSelesaiActionPerformed
 
     /**
