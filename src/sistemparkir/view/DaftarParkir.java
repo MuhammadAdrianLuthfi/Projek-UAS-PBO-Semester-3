@@ -12,6 +12,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import sistemparkir.dao.ParkirDAO;
 import sistemparkir.model.Kendaraan;
+
 /**
  *
  * @author 62878
@@ -47,15 +48,14 @@ public class DaftarParkir extends javax.swing.JFrame {
                 ken.getIdKendaraan(),
                 ken.getPlatNomor(),
                 ken.getJenis(),
-                ken.getGolongan(),
-                
-                
-        });
+                ken.getGolongan(),       
+            });
+            
         tableParkir.setModel(model);
         sorter = new TableRowSorter<TableModel>(model);
         tableParkir.setRowSorter(sorter);
-    }
-
+    
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -210,7 +210,7 @@ public class DaftarParkir extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Pilih data dulu!");
             return;
         }
-        FormParkir fp = new FormParkir(this, id);
+        FormParkir fp = new FormParkir(id);
         fp.setLocationRelativeTo(this);
         fp.setVisible(true); // TODO add your handling code here:
     }//GEN-LAST:event_btnUbahActionPerformed
@@ -257,4 +257,6 @@ public class DaftarParkir extends javax.swing.JFrame {
     private javax.swing.JTable tableParkir;
     private javax.swing.JTextField txtCari;
     // End of variables declaration//GEN-END:variables
+
+    
 }

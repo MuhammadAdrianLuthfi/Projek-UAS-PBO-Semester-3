@@ -5,13 +5,16 @@
 package sistemparkir.view;
 import sistemparkir.config.Database.java;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
 import sistemparkir.model.Kendaraan;
 import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import sistemparkir.dao.ParkirDAO;
 import sistemparkir.model.Kendaraan;
-import sistemparkir.model.JenisKendaraan;
+
 /**
  *
  * @author Adrian
@@ -20,7 +23,7 @@ public class FormPembayaran extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormPembayaran.class.getName());
     Integer idDipilih;
-    Connection kon = Koneksi.bukaKoneksi();
+    Connection kon = Connection.getConnection();
     /**
      * Creates new form FormPembayaran
      */
@@ -36,35 +39,30 @@ public class FormPembayaran extends javax.swing.JFrame {
         ResultSet rs = st.executeQuery(sql);
 
         if (rs.next()) {
-            // 1. Ambil data dari DB dan set ke Label/TextField
             String plat = rs.getString("no_plat");
-            String jamMasukStr = rs.getString("jam_masuk"); // Format: yyyy-MM-dd HH:mm:ss
-            int tarifPerJam = rs.getInt("tarif"); // Misal: 2000 atau 5000
+            String jamMasukStr = rs.getString("jam_masuk"); 
+            int tarifPerJam = rs.getInt("tarif");
 
-            txtNoPlat.setText(plat);
-            txtJamMasuk.setText(jamMasukStr);
+            txtPlat.setText(plat);
+            txtMasuk.setText(jamMasukStr);
 
-            // 2. Ambil Waktu Sekarang (Jam Keluar)
             LocalDateTime sekarang = LocalDateTime.now();
             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String jamKeluarStr = sekarang.format(format);
-            txtJamKeluar.setText(jamKeluarStr);
+            txtKeluar.setText(jamKeluarStr);
 
-            // 3. Hitung Selisih Waktu
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime waktuMasuk = LocalDateTime.parse(jamMasukStr, dtf);
             
             long durasiMenit = java.time.Duration.between(waktuMasuk, sekarang).toMinutes();
-            long durasiJam = (long) Math.ceil(durasiMenit / 60.0); // Dibulatkan ke atas
+            long durasiJam = (long) Math.ceil(durasiMenit / 60.0); 
             
-            if (durasiJam <= 0) durasiJam = 1; // Minimal bayar 1 jam
+            if (durasiJam <= 0) durasiJam = 1;
 
-            // 4. Hitung Total Harga
             long totalBayar = durasiJam * tarifPerJam;
 
-            // 5. Tampilkan ke JField
-            txtLamaParkir.setText(durasiJam + " Jam");
-            txtTotalBayar.setText(String.valueOf(totalBayar));
+            txtLama.setText(durasiJam + " Jam");
+            txtTarif.setText(String.valueOf(totalBayar));
         }
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
@@ -242,8 +240,7 @@ public class FormPembayaran extends javax.swing.JFrame {
 
     private void btnSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelesaiActionPerformed
     try {
-        // Update status di database agar slot parkir kosong kembali
-        String sql = "UPDATE parkir SET jam_keluar=NOW(), status='Keluar' WHERE id='" + getIdKendaraan + "'";
+        String sql = "UPDATE parkir SET jam_keluar=NOW(), status='Keluar' WHERE id='" + idKendaraan + "'";
         PreparedStatement ps = kon.prepareStatement(sql);
         ps.executeUpdate();
 

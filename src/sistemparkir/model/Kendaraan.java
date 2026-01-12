@@ -23,6 +23,10 @@ public abstract class Kendaraan {
     }
 
     public abstract double hitungTarif(int lamaParkir);
+    
+    public void setIdKendaraan(int IdKendaraan){
+        this.idKendaraan = idKendaraan;
+    }
     public int getIdKendaraan(){
         return idKendaraan;
     }
@@ -38,4 +42,8 @@ public abstract class Kendaraan {
     public int getGolongan() { 
         return golongan; 
     }
+    public void setGolongan(int golongan){
+        this.golongan = golongan;
+    }
+    
 }
