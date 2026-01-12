@@ -40,7 +40,7 @@
                           <Component id="btnKeluar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="txtPlat" alignment="0" pref="204" max="32767" attributes="0"/>
+                      <Component id="txtPlatNomor" alignment="0" pref="204" max="32767" attributes="0"/>
                       <Component id="txtGolongan" alignment="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -60,7 +60,7 @@
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="38" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="txtPlat" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtPlatNomor" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
@@ -81,9 +81,15 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JTextField" name="txtPlat">
+    <Component class="javax.swing.JTextField" name="txtPlatNomor">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPlatNomorActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txtGolongan">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtGolonganActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
@@ -120,6 +126,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Keluar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnKeluarActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

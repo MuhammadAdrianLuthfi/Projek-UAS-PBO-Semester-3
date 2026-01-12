@@ -3,19 +3,57 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package sistemparkir.view;
+import sistemparkir.model.Kendaraan;
+import java.util.Set;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import sistemparkir.dao.ParkirDAO;
 
+    private void dispose() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 /**
  *
  * @author 62878
  */
 public class FormParkir extends javax.swing.JFrame {
+    
+        private Integer id;
+        private DaftarParkir parent; 
+        private ParkirDAO pdao = new ParkirDAO();
 
-    /**
-     * Creates new form FormParkir
-     */
-    public FormParkir() {
-        initComponents();
+        public FormParkir(DaftarParkir parent, Integer id) {
+            initComponents();
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            this.parent = parent;
+            this.id = id;
+
+            if (id != null) {
+                setTitle("Ubah Data Parkir");
+                loadData();
+            } else {
+                setTitle("Tambah Kendaraan Masuk");
+            }
+        }
+
+        public FormParkir() {
+            initComponents();
+        }
+
+        private void loadData() {
+            Kendaraan k = pdao.getById(id);
+            if (k != null) {
+                txtPlatNomor.setText(k.getPlatNomor());
+                txtGolongan.setText(String.valueOf(k.getGolongan()));
+            }
+        }
+
+    FormParkir(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,7 +64,7 @@ public class FormParkir extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtPlat = new javax.swing.JTextField();
+        txtPlatNomor = new javax.swing.JTextField();
         txtGolongan = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -36,6 +74,18 @@ public class FormParkir extends javax.swing.JFrame {
         btnKeluar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        txtPlatNomor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPlatNomorActionPerformed(evt);
+            }
+        });
+
+        txtGolongan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtGolonganActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Form Parkir");
 
@@ -58,6 +108,11 @@ public class FormParkir extends javax.swing.JFrame {
         });
 
         btnKeluar.setText("Keluar");
+        btnKeluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKeluarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,7 +133,7 @@ public class FormParkir extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnKeluar)
                             .addGap(18, 18, 18))
-                        .addComponent(txtPlat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                        .addComponent(txtPlatNomor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                         .addComponent(txtGolongan, javax.swing.GroupLayout.Alignment.LEADING)))
                 .addContainerGap(41, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -93,7 +148,7 @@ public class FormParkir extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPlat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPlatNomor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -112,18 +167,61 @@ public class FormParkir extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMasukActionPerformed
-        // TODO add your handling code here:
+        
+        try {
+            Kendaraan k = new Kendaraan();
+            k.setPlatNomor(txtPlatNomor.getText());
+            k.setGolongan(Integer.parseInt(txtGolongan.getText()));
+
+            boolean sukses;
+            if (id == null) {
+                sukses = pdao.insert(k);
+            } else {
+                k.setIdKendaraan(id);
+                sukses = pdao.update(k);
+            }
+
+            if (sukses) {
+                JOptionPane.showMessageDialog(this, "Data Berhasil disimpan!");
+                if (parent != null) parent.loadData();
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan!");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Golongan harus berupa angka!");
+        }
+    }// TODO add your handling code here:
     }//GEN-LAST:event_btnMasukActionPerformed
 
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
       dispose();// TODO add your handling code here:
     }//GEN-LAST:event_btnBatalActionPerformed
 
+    private void txtPlatNomorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlatNomorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPlatNomorActionPerformed
+
+    private void txtGolonganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGolonganActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtGolonganActionPerformed
+
+    private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
+        if (id == null) {
+                    JOptionPane.showMessageDialog(this, "Simpan data atau pilih data terlebih dahulu!");
+                } else {
+                    FormPembayaran fp = new FormPembayaran(id);
+                    fp.setVisible(true);
+                    dispose();
+                }
+            }                 // TODO add your handling code here:
+    }//GEN-LAST:event_btnKeluarActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -146,7 +244,7 @@ public class FormParkir extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new FormParkir().setVisible(true);
@@ -162,6 +260,6 @@ public class FormParkir extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField txtGolongan;
-    private javax.swing.JTextField txtPlat;
+    private javax.swing.JTextField txtPlatNomor;
     // End of variables declaration//GEN-END:variables
 }
