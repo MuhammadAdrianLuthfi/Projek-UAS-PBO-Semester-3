@@ -1,23 +1,32 @@
+package sistemparkir.view;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package sistemparkir.view;
+//package sistemparkir.view;
 import sistemparkir.model.Kendaraan;
+import sistemparkir.view.DaftarParkir;
 import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import sistemparkir.dao.ParkirDAO;
+import sistemparkir.model.Kendaraan;
+import sistemparkir.view.FormPembayaran;
 
-    private void dispose() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+  //  private void FormParkir(id){
+  //      throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  // }
+
+  //  private void dispose(){
+  //      throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+  //  }
 /**
  *
  * @author 62878
  */
 public class FormParkir extends javax.swing.JFrame {
-    
+        Kendaraan kendaraan;
         private Integer id;
         private DaftarParkir parent; 
         private ParkirDAO pdao = new ParkirDAO();
@@ -64,6 +73,7 @@ public class FormParkir extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jProgressBar1 = new javax.swing.JProgressBar();
         txtPlatNomor = new javax.swing.JTextField();
         txtGolongan = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -72,96 +82,81 @@ public class FormParkir extends javax.swing.JFrame {
         btnMasuk = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
         btnKeluar = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
 
         txtPlatNomor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPlatNomorActionPerformed(evt);
             }
         });
+        getContentPane().add(txtPlatNomor);
+        txtPlatNomor.setBounds(171, 78, 204, 26);
 
         txtGolongan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtGolonganActionPerformed(evt);
             }
         });
+        getContentPane().add(txtGolongan);
+        txtGolongan.setBounds(171, 141, 204, 26);
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Form Parkir");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(10, 260, 250, 48);
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Plat Nomor");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(40, 80, 120, 25);
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Golongan");
+        jLabel3.setToolTipText("");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(40, 140, 90, 25);
 
+        btnMasuk.setBackground(new java.awt.Color(102, 102, 255));
         btnMasuk.setText("Masuk");
         btnMasuk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMasukActionPerformed(evt);
             }
         });
+        getContentPane().add(btnMasuk);
+        btnMasuk.setBounds(185, 197, 76, 27);
 
+        btnBatal.setBackground(new java.awt.Color(255, 51, 51));
         btnBatal.setText("Batal");
         btnBatal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBatalActionPerformed(evt);
             }
         });
+        getContentPane().add(btnBatal);
+        btnBatal.setBounds(230, 242, 76, 27);
 
+        btnKeluar.setBackground(new java.awt.Color(255, 204, 51));
+        btnKeluar.setForeground(new java.awt.Color(0, 0, 0));
         btnKeluar.setText("Keluar");
         btnKeluar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnKeluarActionPerformed(evt);
             }
         });
+        getContentPane().add(btnKeluar);
+        btnKeluar.setBounds(281, 197, 76, 27);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(86, 86, 86)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(14, 14, 14)
-                            .addComponent(btnMasuk)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnKeluar)
-                            .addGap(18, 18, 18))
-                        .addComponent(txtPlatNomor, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                        .addComponent(txtGolongan, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(41, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnBatal)
-                .addGap(110, 110, 110))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPlatNomor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtGolongan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnMasuk)
-                    .addComponent(btnKeluar))
-                .addGap(18, 18, 18)
-                .addComponent(btnBatal)
-                .addGap(47, 47, 47))
-        );
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVBA/BG1.png"))); // NOI18N
+        jLabel4.setText("jLabel4");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(-10, -10, 480, 330);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -169,6 +164,7 @@ public class FormParkir extends javax.swing.JFrame {
     private void btnMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMasukActionPerformed
         
         try {
+            
             Kendaraan k = new Kendaraan();
             k.setPlatNomor(txtPlatNomor.getText());
             k.setGolongan(Integer.parseInt(txtGolongan.getText()));
@@ -191,7 +187,7 @@ public class FormParkir extends javax.swing.JFrame {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Golongan harus berupa angka!");
         }
-    }// TODO add your handling code here:
+    // TODO add your handling code here:
     }//GEN-LAST:event_btnMasukActionPerformed
 
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
@@ -214,7 +210,7 @@ public class FormParkir extends javax.swing.JFrame {
                     fp.setVisible(true);
                     dispose();
                 }
-            }                 // TODO add your handling code here:
+                             // TODO add your handling code here:
     }//GEN-LAST:event_btnKeluarActionPerformed
 
     /**
@@ -259,6 +255,8 @@ public class FormParkir extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JTextField txtGolongan;
     private javax.swing.JTextField txtPlatNomor;
     // End of variables declaration//GEN-END:variables
