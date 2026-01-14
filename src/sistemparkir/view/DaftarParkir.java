@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package sistemparkir.view;
+
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 import javax.swing.JOptionPane;
@@ -11,23 +12,20 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import sistemparkir.dao.ParkirDAO;
-import sistemparkir.model.Kendaraan;
 
-/**
- *
- * @author 62878
- */
 public class DaftarParkir extends javax.swing.JFrame {
     ParkirDAO pdao = new ParkirDAO();
     TableRowSorter<TableModel> sorter;
      
     public DaftarParkir() {
-      initComponents();
-      loadData();  
+        initComponents();
+        loadData();  
+        setLocationRelativeTo(null);
     }
+    
     private Integer getSelectedId() {
         int row = tableParkir.getSelectedRow();
-        if (row == -1){
+        if (row == -1) {
             return null;
         }
         int modelRow = tableParkir.convertRowIndexToModel(row);
@@ -38,25 +36,63 @@ public class DaftarParkir extends javax.swing.JFrame {
         }
         return null;
     }
-    public void loadData(){
-        List<Kendaraan> list = pdao.getAll();
-        DefaultTableModel model = new DefaultTableModel(
-        new Object[]{"ID", "Plat Nomor", "Golongan", "Jenis", "Tarif"}, 0);
-        tableParkir.setModel(model);
-        for(Kendaraan ken : list){
-            model.addRow(new Object[]{
-                ken.getIdKendaraan(),
-                ken.getPlatNomor(),
-                ken.getJenis(),
-                ken.getGolongan(),       
-            });
-            
-        tableParkir.setModel(model);
-        sorter = new TableRowSorter<TableModel>(model);
-        tableParkir.setRowSorter(sorter);
     
+    public void loadData() {
+        List<Object[]> list = pdao.getAllParkirAktif();
+        DefaultTableModel model = new DefaultTableModel(
+            new Object[]{"ID", "Plat Nomor", "Golongan", "Waktu", "Tarif"}, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        tableParkir.setModel(model);
+        
+        for (Object[] row : list) {
+            String golongan;
+            int gol = Integer.parseInt(row[2].toString());
+            switch (gol) {
+                case 1: golongan = "Mahasiswa"; break;
+                case 2: golongan = "Motor"; break;
+                case 3: golongan = "Mobil"; break;
+                case 4: golongan = "Truck"; break;
+                default: golongan = "Tidak diketahui";
+            }
+            
+            // Format waktu
+            String waktu = "";
+            if (row[4] != null) {
+                java.sql.Timestamp ts = (java.sql.Timestamp) row[4];
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm");
+                waktu = sdf.format(ts);
+            }
+            
+            // Format tarif
+            String tarif = "";
+            if (row[6] != null) {
+                double total = Double.parseDouble(row[6].toString());
+                if (total == 0) {
+                    tarif = "GRATIS";
+                } else {
+                    tarif = String.format("Rp %,.0f", total);
+                }
+            }
+            
+            model.addRow(new Object[]{
+                row[0],
+                row[1],
+                golongan,
+                waktu,
+                tarif
+            });
         }
+        
+        sorter = new TableRowSorter<>(model);
+        tableParkir.setRowSorter(sorter);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -174,45 +210,61 @@ public class DaftarParkir extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
-        String text = txtCari.getText(); 
-            if (sorter == null) {
-            return; 
-            }
-            if(text.length() == 0) {
-                sorter.setRowFilter(null);
+        Integer id = getSelectedId();
+        if (id == null) {
+            JOptionPane.showMessageDialog(this, "Pilih data dulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        int confirm = JOptionPane.showConfirmDialog(
+            this, "Hapus data ini?", "Konfirmasi",
+            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            boolean success = pdao.deleteParkir(id);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                loadData();
             } else {
-                try {
-                    sorter.setRowFilter(RowFilter.regexFilter(text));
-                } catch(PatternSyntaxException pse) {
-                    System.out.println("Bad regex pattern");
-                }
-            }        
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }     
     }//GEN-LAST:event_btnCariActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         Integer id = getSelectedId();
         if (id == null) {
-            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+            JOptionPane.showMessageDialog(this, "Pilih data dulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
-        if (JOptionPane.showConfirmDialog(
+        int confirm = JOptionPane.showConfirmDialog(
             this, "Hapus data ini?", "Konfirmasi",
-            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            pdao.delete(id);
-            loadData();
-        }        // TODO add your handling code here:
+            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            boolean success = pdao.deleteParkir(id);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Data berhasil dihapus!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                loadData();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menghapus data!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }   // TODO add your handling code here:
     }//GEN-LAST:event_btnHapusActionPerformed
 
     private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
        Integer id = getSelectedId();
         if (id == null) {
-            JOptionPane.showMessageDialog(this, "Pilih data dulu!");
+            JOptionPane.showMessageDialog(this, "Pilih data dulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        FormParkir fp = new FormParkir(id);
-        fp.setLocationRelativeTo(this);
-        fp.setVisible(true); // TODO add your handling code here:
+        
+        Object[] dataParkir = pdao.getParkirById(id);
+        if (dataParkir != null) {
+            FormParkir fp = new FormParkir(this, id, dataParkir);
+            fp.setVisible(true);
+        }// TODO add your handling code here:
     }//GEN-LAST:event_btnUbahActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
@@ -220,32 +272,23 @@ public class DaftarParkir extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void txtCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariActionPerformed
+        btnCariActionPerformed(evt);
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCariActionPerformed
     public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                break;
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-    } catch (ClassNotFoundException ex) {
-        java.util.logging.Logger.getLogger(DaftarParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (InstantiationException ex) {
-        java.util.logging.Logger.getLogger(DaftarParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (IllegalAccessException ex) {
-        java.util.logging.Logger.getLogger(DaftarParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-        java.util.logging.Logger.getLogger(DaftarParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        
+        java.awt.EventQueue.invokeLater(() -> new DaftarParkir().setVisible(true));
     }
-    java.awt.EventQueue.invokeLater(new Runnable() {
-        public void run() {
-            new DaftarParkir().setVisible(true);
-        }
-    });
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCari;
