@@ -133,120 +133,85 @@ public class FormPembayaran extends javax.swing.JFrame {
         txtTarif = new javax.swing.JTextField();
         btnBatal = new javax.swing.JButton();
         btnSelesai = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(null);
 
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("No Plat");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(26, 57, 57, 16);
 
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Golongan");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(26, 91, 52, 16);
 
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Jam Masuk");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(26, 128, 58, 16);
 
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Jam Keluar");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(26, 159, 58, 16);
 
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Lama Parkir");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(26, 199, 62, 16);
 
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Total Tarif");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(26, 239, 62, 16);
 
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("PEMBAYARAN");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(162, 20, 84, 16);
 
         txtPlat.addActionListener(this::txtPlatActionPerformed);
+        getContentPane().add(txtPlat);
+        txtPlat.setBounds(107, 54, 278, 22);
 
         txtGol.addActionListener(this::txtGolActionPerformed);
+        getContentPane().add(txtGol);
+        txtGol.setBounds(107, 88, 278, 22);
 
         txtMasuk.addActionListener(this::txtMasukActionPerformed);
+        getContentPane().add(txtMasuk);
+        txtMasuk.setBounds(107, 128, 278, 22);
 
         txtKeluar.addActionListener(this::txtKeluarActionPerformed);
+        getContentPane().add(txtKeluar);
+        txtKeluar.setBounds(107, 156, 278, 22);
 
         txtLama.addActionListener(this::txtLamaActionPerformed);
+        getContentPane().add(txtLama);
+        txtLama.setBounds(106, 196, 279, 22);
 
         txtTarif.addActionListener(this::txtTarifActionPerformed);
+        getContentPane().add(txtTarif);
+        txtTarif.setBounds(106, 236, 279, 22);
 
         btnBatal.setText("Batal");
         btnBatal.addActionListener(this::btnBatalActionPerformed);
+        getContentPane().add(btnBatal);
+        btnBatal.setBounds(127, 270, 72, 23);
 
         btnSelesai.setText("Selesai");
         btnSelesai.addActionListener(this::btnSelesaiActionPerformed);
+        getContentPane().add(btnSelesai);
+        btnSelesai.setBounds(254, 270, 72, 23);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtTarif))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtLama))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(23, 23, 23)
-                                .addComponent(txtMasuk))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
-                                .addGap(24, 24, 24)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtGol)
-                                    .addComponent(txtPlat)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(23, 23, 23)
-                                .addComponent(txtKeluar))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(162, 162, 162)
-                        .addComponent(jLabel7)))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(127, 127, 127)
-                .addComponent(btnBatal)
-                .addGap(55, 55, 55)
-                .addComponent(btnSelesai)
-                .addContainerGap(65, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel7)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtPlat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtGol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(txtMasuk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtKeluar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtLama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtTarif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBatal)
-                    .addComponent(btnSelesai))
-                .addContainerGap(7, Short.MAX_VALUE))
-        );
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder/WhatsApp Image 2026-01-14 at 10.15.12 (2).jpeg"))); // NOI18N
+        jLabel8.setText("jLabel8");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(-3, -4, 400, 310);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -334,6 +299,7 @@ public class FormPembayaran extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField txtGol;
     private javax.swing.JTextField txtKeluar;
     private javax.swing.JTextField txtLama;
@@ -341,4 +307,4 @@ public class FormPembayaran extends javax.swing.JFrame {
     private javax.swing.JTextField txtPlat;
     private javax.swing.JTextField txtTarif;
     // End of variables declaration//GEN-END:variables
-
+}
