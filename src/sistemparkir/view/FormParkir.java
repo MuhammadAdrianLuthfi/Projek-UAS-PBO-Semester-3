@@ -5,60 +5,56 @@ package sistemparkir.view;
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 //package sistemparkir.view;
-import sistemparkir.model.Kendaraan;
-import sistemparkir.view.DaftarParkir;
-import java.util.Set;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import sistemparkir.dao.ParkirDAO;
-import sistemparkir.model.Kendaraan;
-import sistemparkir.view.FormPembayaran;
+import sistemparkir.model.*;
 
-  //  private void FormParkir(id){
-  //      throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  // }
-
-  //  private void dispose(){
-  //      throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-  //  }
-/**
- *
- * @author 62878
- */
 public class FormParkir extends javax.swing.JFrame {
-        Kendaraan kendaraan;
-        private Integer id;
-        private DaftarParkir parent; 
-        private ParkirDAO pdao = new ParkirDAO();
+    private DaftarParkir parent;
+    private Integer idParkir;
+    private Object[] dataParkir;
+    private ParkirDAO pdao = new ParkirDAO();
+    private javax.swing.JComboBox<String> cmbGolongan;
 
-        public FormParkir(DaftarParkir parent, Integer id) {
-            initComponents();
-            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            this.parent = parent;
-            this.id = id;
+    
+    public FormParkir (){}
+    
+    
+    public FormParkir(DaftarParkir parent, Integer idParkir, Object[] dataParkir) {
+        initComponents();
+        this.parent = parent;
+        this.idParkir = idParkir;
+        this.dataParkir = dataParkir;
+        
+        setLocationRelativeTo(parent);
+        
+        if (idParkir != null && dataParkir != null) {
+            setTitle("Ubah Data Parkir");
+            loadData();
+            btnKeluar.setVisible(true);
+        } else {
+            setTitle("Tambah Kendaraan Masuk");
+            cmbGolongan.setSelectedIndex(0);
+            btnKeluar.setVisible(false);
+        }
+    }
 
-            if (id != null) {
-                setTitle("Ubah Data Parkir");
-                loadData();
-            } else {
-                setTitle("Tambah Kendaraan Masuk");
+    private void loadData() {
+        if (dataParkir != null) {
+            txtPlatNomor.setText(dataParkir[1].toString());
+            
+            try {
+                int golongan = Integer.parseInt(dataParkir[2].toString());
+                for (int i = 0; i < cmbGolongan.getItemCount(); i++) {
+                    if (cmbGolongan.getItemAt(i).startsWith(golongan + " -")) {
+                        cmbGolongan.setSelectedIndex(i);
+                        break;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                cmbGolongan.setSelectedIndex(0);
             }
         }
-
-        public FormParkir() {
-            initComponents();
-        }
-
-        private void loadData() {
-            Kendaraan k = pdao.getById(id);
-            if (k != null) {
-                txtPlatNomor.setText(k.getPlatNomor());
-                txtGolongan.setText(String.valueOf(k.getGolongan()));
-            }
-        }
-
-    FormParkir(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
     
@@ -74,6 +70,7 @@ public class FormParkir extends javax.swing.JFrame {
     private void initComponents() {
 
         jProgressBar1 = new javax.swing.JProgressBar();
+        jLabel4 = new javax.swing.JLabel();
         txtPlatNomor = new javax.swing.JTextField();
         txtGolongan = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -82,9 +79,14 @@ public class FormParkir extends javax.swing.JFrame {
         btnMasuk = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
         btnKeluar = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVBA/BG1.png"))); // NOI18N
+        jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
         getContentPane().setLayout(null);
 
         txtPlatNomor.addActionListener(new java.awt.event.ActionListener() {
@@ -93,7 +95,7 @@ public class FormParkir extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtPlatNomor);
-        txtPlatNomor.setBounds(171, 78, 204, 26);
+        txtPlatNomor.setBounds(171, 78, 204, 22);
 
         txtGolongan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -101,13 +103,13 @@ public class FormParkir extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtGolongan);
-        txtGolongan.setBounds(171, 141, 204, 26);
+        txtGolongan.setBounds(171, 141, 204, 22);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Form Parkir");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(10, 260, 250, 48);
+        jLabel1.setBounds(130, 0, 250, 48);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -130,7 +132,7 @@ public class FormParkir extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnMasuk);
-        btnMasuk.setBounds(185, 197, 76, 27);
+        btnMasuk.setBounds(185, 197, 72, 23);
 
         btnBatal.setBackground(new java.awt.Color(255, 51, 51));
         btnBatal.setText("Batal");
@@ -140,10 +142,9 @@ public class FormParkir extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnBatal);
-        btnBatal.setBounds(230, 242, 76, 27);
+        btnBatal.setBounds(230, 242, 72, 23);
 
         btnKeluar.setBackground(new java.awt.Color(255, 204, 51));
-        btnKeluar.setForeground(new java.awt.Color(0, 0, 0));
         btnKeluar.setText("Keluar");
         btnKeluar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,41 +152,63 @@ public class FormParkir extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnKeluar);
-        btnKeluar.setBounds(281, 197, 76, 27);
+        btnKeluar.setBounds(281, 197, 72, 23);
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(0, 0, 100, 100);
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/JAVBA/BG1.png"))); // NOI18N
-        jLabel4.setText("jLabel4");
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(-10, -10, 480, 330);
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/folder/WhatsApp Image 2026-01-14 at 10.15.12.jpeg"))); // NOI18N
+        jLabel5.setText("jLabel5");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(0, 0, 510, 330);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMasukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMasukActionPerformed
         
+        String platNomor = txtPlatNomor.getText().trim();
+        
+        if (platNomor.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Plat nomor harus diisi!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         try {
+            int golongan = cmbGolongan.getSelectedIndex() + 1;
+            Kendaraan kendaraan = pdao.createKendaraanByGolongan(0, platNomor, golongan);
             
-            Kendaraan k = new Kendaraan();
-            k.setPlatNomor(txtPlatNomor.getText());
-            k.setGolongan(Integer.parseInt(txtGolongan.getText()));
-
-            boolean sukses;
-            if (id == null) {
-                sukses = pdao.insert(k);
+            boolean success;
+            if (idParkir == null) {
+                success = pdao.insert(kendaraan);
+                if (success) {
+                    success = pdao.insertParkir(kendaraan);
+                    if (success) {
+                        JOptionPane.showMessageDialog(this, 
+                            "Kendaraan berhasil masuk!\n" +
+                            "Plat: " + platNomor + "\n" +
+                            "Golongan: " + cmbGolongan.getSelectedItem(),
+                            "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
             } else {
-                k.setIdKendaraan(id);
-                sukses = pdao.update(k);
+                kendaraan.setIdKendaraan(Integer.parseInt(dataParkir[0].toString()));
+                success = pdao.updateKendaraan(kendaraan);
+                if (success) {
+                    JOptionPane.showMessageDialog(this, "Data berhasil diperbarui!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
-
-            if (sukses) {
-                JOptionPane.showMessageDialog(this, "Data Berhasil disimpan!");
-                if (parent != null) parent.loadData();
+            
+            if (success) {
+                if (parent != null) {
+                    parent.loadData();
+                }
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Gagal menyimpan!");
+                JOptionPane.showMessageDialog(this, "Gagal menyimpan data!", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Golongan harus berupa angka!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     // TODO add your handling code here:
     }//GEN-LAST:event_btnMasukActionPerformed
@@ -203,14 +226,34 @@ public class FormParkir extends javax.swing.JFrame {
     }//GEN-LAST:event_txtGolonganActionPerformed
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
-        if (id == null) {
-                    JOptionPane.showMessageDialog(this, "Simpan data atau pilih data terlebih dahulu!");
-                } else {
-                    FormPembayaran fp = new FormPembayaran(id);
-                    fp.setVisible(true);
+        if (idParkir == null) {
+            JOptionPane.showMessageDialog(this, "Simpan data terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                "Proses keluar parkir?\nPlat: " + txtPlatNomor.getText(),
+                "Konfirmasi Keluar", JOptionPane.YES_NO_OPTION);
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                double totalBayar = pdao.prosesKeluarParkir(idParkir);
+                if (totalBayar >= 0) {
+                    String message;
+                    if (totalBayar == 0) {
+                        message = "Parkir selesai!\nTotal Bayar: GRATIS (Mahasiswa)";
+                    } else {
+                        message = "Parkir selesai!\nTotal Bayar: Rp " + totalBayar;
+                    }
+                    
+                    JOptionPane.showMessageDialog(this, message, "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    if (parent != null) {
+                        parent.loadData();
+                    }
                     dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Gagal memproses keluar parkir!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                             // TODO add your handling code here:
+            }
+        }               // TODO add your handling code here:
     }//GEN-LAST:event_btnKeluarActionPerformed
 
     /**
@@ -229,21 +272,13 @@ public class FormParkir extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FormParkir.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        //</editor-fold>
-
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormParkir().setVisible(true);
+                new FormParkir(null, null, null).setVisible(true);
             }
         });
     }
@@ -256,6 +291,8 @@ public class FormParkir extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JTextField txtGolongan;
     private javax.swing.JTextField txtPlatNomor;
