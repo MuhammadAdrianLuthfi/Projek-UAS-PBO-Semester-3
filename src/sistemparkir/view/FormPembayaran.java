@@ -1,69 +1,114 @@
+
+
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package sistemparkir.view;
-import sistemparkir.config.Database.java;
+
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.time.Duration;
 import java.time.format.DateTimeFormatter;
-import sistemparkir.model.Kendaraan;
-import java.util.Set;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import sistemparkir.config.Database;
 import sistemparkir.dao.ParkirDAO;
 import sistemparkir.model.Kendaraan;
 
-/**
- *
- * @author Adrian
- */
 public class FormPembayaran extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FormPembayaran.class.getName());
-    Integer idDipilih;
-    Connection kon = Connection.getConnection();
-    /**
-     * Creates new form FormPembayaran
-     */
-    public FormPembayaran(Integer id) {
-    initComponents();
-    this.idDipilih = id; // Pastikan id dari DaftarParkir masuk ke sini
-    tampilkanDataDanHitung();
-}
-
-private void tampilkanDataDanHitung() {
-    try {
-        // Gunakan PreparedStatement agar lebih aman
-        String sql = "SELECT * FROM parkir WHERE id = ?";
-        PreparedStatement st = kon.prepareStatement(sql);
-        st.setInt(1, idDipilih);
-        ResultSet rs = st.executeQuery();
-
-        if (rs.next()) {
-            txtPlat.setText(rs.getString("no_plat"));
-            txtMasuk.setText(rs.getString("jam_masuk"));
-            txtGol.setText(rs.getString("golongan")); // Isi field golongan yang kosong tadi
-            int tarifPerJam = rs.getInt("tarif");
-
-            LocalDateTime sekarang = LocalDateTime.now();
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            txtKeluar.setText(sekarang.format(dtf));
-
-            LocalDateTime waktuMasuk = LocalDateTime.parse(rs.getString("jam_masuk"), dtf);
-            long durasiMenit = java.time.Duration.between(waktuMasuk, sekarang).toMinutes();
-            long durasiJam = (long) Math.ceil(durasiMenit / 60.0);
-            if (durasiJam <= 0) durasiJam = 1;
-
-            long totalBayar = durasiJam * tarifPerJam;
-            txtLama.setText(durasiJam + " Jam");
-            txtTarif.setText(String.valueOf(totalBayar));
+    private Integer idParkir;
+    private ParkirDAO pdao = new ParkirDAO();
+    
+    
+    public FormPembayaran(Integer idParkir) {
+        initComponents();
+        this.idParkir = idParkir;
+        
+        if (idParkir != null) {
+            tampilkanDataDanHitung();
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        
+        setLocationRelativeTo(null);
     }
-}
+
+    private void tampilkanDataDanHitung() {
+        try (Connection conn = Database.getConnection()) {
+            if (conn == null) {
+                JOptionPane.showMessageDialog(this, "Tidak dapat terhubung ke database!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            String sql = "SELECT p.*, k.jenis FROM parkir p " +
+                        "LEFT JOIN kendaraan k ON p.id_kendaraan = k.id " +
+                        "WHERE p.id = ?";
+            
+            try (PreparedStatement st = conn.prepareStatement(sql)) {
+                st.setInt(1, idParkir);
+                
+                try (ResultSet rs = st.executeQuery()) {
+                    if (rs.next()) {
+                        txtPlat.setText(rs.getString("plat_nomor"));
+                        
+                        int golongan = rs.getInt("golongan");
+                        txtGol.setText(getNamaGolongan(golongan));
+                        txtMasuk.setText(formatDateTime(rs.getTimestamp("waktu_masuk")));
+                        
+                        LocalDateTime sekarang = LocalDateTime.now();
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                        txtKeluar.setText(sekarang.format(dtf));
+                        
+                        Timestamp waktuMasuk = rs.getTimestamp("waktu_masuk");
+                        LocalDateTime masuk = waktuMasuk.toLocalDateTime();
+                        
+                        long durasiMenit = java.time.Duration.between(masuk, sekarang).toMinutes();
+                        long durasiJam = (long) Math.ceil(durasiMenit / 60.0);
+                        if (durasiJam <= 0) durasiJam = 1;
+                        
+                        Kendaraan kendaraan = pdao.createKendaraanByGolongan(0, rs.getString("plat_nomor"), golongan);
+                        double totalBayar = kendaraan.hitungTarif((int) durasiJam);
+                        
+                        txtLama.setText(durasiJam + " Jam");
+                        
+                        if (totalBayar == 0) {
+                            txtTarif.setText("GRATIS (Mahasiswa)");
+                            txtTarif.setForeground(new java.awt.Color(0, 128, 0));
+                        } else {
+                            txtTarif.setText("Rp " + formatRupiah(totalBayar));
+                            txtTarif.setForeground(new java.awt.Color(51, 153, 0));
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Data tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
+                        dispose();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    private String getNamaGolongan(int golongan) {
+        switch (golongan) {
+            case 1: return "Mahasiswa (Gratis)";
+            case 2: return "Motor";
+            case 3: return "Mobil";
+            case 4: return "Truck";
+            default: return "Tidak diketahui";
+        }
+    }
+    
+    private String formatDateTime(Timestamp timestamp) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        return timestamp.toLocalDateTime().format(dtf);
+    }
+    
+    private String formatRupiah(double amount) {
+        return String.format("%,.0f", amount);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -211,7 +256,7 @@ private void tampilkanDataDanHitung() {
     }//GEN-LAST:event_txtPlatActionPerformed
 
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
-        dispose();        // TODO add your handling code here:
+        dispose();  // TODO add your handling code here:
     }//GEN-LAST:event_btnBatalActionPerformed
 
     private void txtGolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtGolActionPerformed
@@ -236,29 +281,31 @@ private void tampilkanDataDanHitung() {
 
     private void btnSelesaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelesaiActionPerformed
     try {
-        // Gunakan idDipilih, bukan idKendaraan (variabel tidak ada)
-        String sql = "UPDATE parkir SET jam_keluar=NOW(), status='Keluar' WHERE id=?";
-        PreparedStatement ps = kon.prepareStatement(sql);
-        ps.setInt(1, idDipilih);
-        ps.executeUpdate();
-
-        JOptionPane.showMessageDialog(this, "Pembayaran Berhasil!");
-        this.dispose(); 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Gagal Update: " + e.getMessage());
-    }
-}// TODO add your handling code here:
+            double totalBayar = pdao.prosesKeluarParkir(idParkir);
+            
+            if (totalBayar >= 0) {
+                String message;
+                if (totalBayar == 0) {
+                    message = "Pembayaran berhasil!\nTotal Bayar: GRATIS (Mahasiswa)";
+                } else {
+                    message = "Pembayaran berhasil!\nTotal Bayar: Rp " + formatRupiah(totalBayar);
+                }
+                
+                JOptionPane.showMessageDialog(this, message, "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal memproses pembayaran!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } //TODO add your handling code here:
     }//GEN-LAST:event_btnSelesaiActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -266,13 +313,15 @@ private void tampilkanDataDanHitung() {
                     break;
                 }
             }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FormPembayaran().setVisible(true));
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FormPembayaran(null).setVisible(true);
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -292,4 +341,4 @@ private void tampilkanDataDanHitung() {
     private javax.swing.JTextField txtPlat;
     private javax.swing.JTextField txtTarif;
     // End of variables declaration//GEN-END:variables
-}
+
