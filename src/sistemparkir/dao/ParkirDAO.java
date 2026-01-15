@@ -8,128 +8,63 @@ package sistemparkir.dao;
  *
  * @author 62878
  */
-import sistemparkir.config.Database;
-import sistemparkir.model.*;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+public abstract class ParkirDAO {
+    // Metode utama yang akan di-override
+    public abstract int hitungBiaya(KendaraanDAO knd, int lamaJam);
+    
+    public void cetakStruk(KendaraanDAO knd, int lamaJam) {
+        int total = hitungBiaya(knd, lamaJam);
+        System.out.println("--- STRUK PARKIR ---");
+        System.out.println("Plat Nomor  : " + knd.getplatNomor());
+        System.out.println("Jenis       : " + knd.getjenis());
+        System.out.println("Lama Parkir : " + lamaJam + " Jam");
+        System.out.println("Total Bayar : Rp " + total);
+        System.out.println("--------------------");
+    }
+    
+    public class Kendaraan {
+    private String jenis;
+    private String platNomor;
+    private boolean idMahasiswa;
 
-public class ParkirDAO {
-    public boolean insert(Kendaraan kendaraan) {
-        String sql = "INSERT INTO kendaraan (plat_nomor, golongan, jenis, tarif_per_jam) VALUES (?, ?, ?, ?)";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, kendaraan.getPlatNomor());
-            ps.setInt(2, kendaraan.getGolongan());
-            ps.setString(3, kendaraan.getJenis().toString());
-            ps.setDouble(4, kendaraan.hitungTarif(1));
-            ps.executeUpdate();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+    public Kendaraan(String jenis, String platNomor, boolean isMahasiswa) {
+        this.jenis = jenis;
+        this.platNomor = platNomor;
+        this.idMahasiswa = isMahasiswa;
+    }
+
+    // Pastikan nama method sama persis dengan yang dipanggil
+    public String getplatNomor() { return platNomor; }
+    public String getjenis() { return jenis; }
+    public boolean idMahasiswa() { return idMahasiswa; }
+}
+    public class ParkirDAOImpl extends ParkirDAO {
+
+    @Override
+    public int hitungBiaya(KendaraanDAO knd, int lamaJam) {
+        // Jika mahasiswa, biaya otomatis 0 (Gratis)
+        if (knd.idMahasiswa()) {
+            return 0;
         }
-    }
 
-    public List<Kendaraan> getAll() {
-        List<Kendaraan> list = new ArrayList<>();
-        String sql = "SELECT * FROM kendaraan";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Kendaraan k = null;
-                int id = rs.getInt("id");
-                String plat = rs.getString("plat_nomor");
-                int gol = rs.getInt("golongan");
-                
-                switch (gol) {
-                    case 1:
-                    k = new Mahasiswa(id,plat);
-                    break;
-                case 2:
-                    k = new Motor(id,plat);
-                    break;
-                case 3:
-                    k = new Mobil(id,plat);
-                    break;
-                case 4:
-                    k = new Truck(id,plat);
-                    break;
-                default:
-                    k = null;
-                    break;
-                }
-                
-                if (k != null) {
-                    list.add(k);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        int tarifPerJam;
+        switch (knd.getJenis()) {
+            case "motor":
+                tarifPerJam = 2000;
+                break;
+            case "mobil":
+                tarifPerJam = 5000;
+                break;
+            case "truck":
+                tarifPerJam = 7000;
+                break;
+            default:
+                tarifPerJam = 0;
+                System.out.println("Jenis kendaraan tidak dikenal.");
+                break;
         }
-        return list;
-    }
 
-    public boolean update(Kendaraan kendaraan, String platLama) {
-        String sql = "UPDATE kendaraan SET plat_nomor = ?, golongan = ?, jenis = ?, tarif_per_jam = ? WHERE plat_nomor = ?";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, kendaraan.getPlatNomor());
-            ps.setInt(2, kendaraan.getGolongan());
-            ps.setString(3, kendaraan.getJenis().toString());
-            ps.setDouble(4, kendaraan.hitungTarif(1));
-            ps.setString(5, platLama);
-            ps.executeUpdate();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        return tarifPerJam * lamaJam;
         }
-    }
-
-    public boolean delete(String platNomor) {
-        String sql = "DELETE FROM kendaraan WHERE plat_nomor = ?";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, platNomor);
-            ps.executeUpdate();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public double getTarifKeluar(String platNomor) {
-        String sql = "SELECT waktu_masuk, tarif_per_jam FROM kendaraan WHERE plat_nomor = ?";
-        try (Connection conn = Database.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, platNomor);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Timestamp masuk = rs.getTimestamp("waktu_masuk");
-                double tarif = rs.getDouble("tarif_per_jam");
-                long selisih = System.currentTimeMillis() - masuk.getTime();
-                int jam = (int) Math.ceil((double) selisih / (1000 * 60 * 60));
-                if (jam <= 0) jam = 1;
-                return jam * tarif;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    public void delete(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public boolean update(Kendaraan k) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public Kendaraan getById(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
