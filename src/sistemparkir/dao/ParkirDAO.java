@@ -4,6 +4,8 @@
  */
 package sistemparkir.dao;
 
+import java.util.List;
+
 /**
  *
  * @author 62878
@@ -21,6 +23,47 @@ public abstract class ParkirDAO {
         System.out.println("Total Bayar : Rp " + total);
         System.out.println("--------------------");
     }
+    KendaraanDAO kd;
+
+    public sistemparkir.model.Kendaraan createKendaraanByGolongan(int i, String b, int golongan) {
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+           // ps.setString(1, kendaraan.getPlatNomor());
+           //ps.setInt(i, kd.getGolongan());
+            ps.setString(b, kd.getJenis().toString());
+            ps.setInt(golongan, kd.getGolongan());
+            ps.executeUpdate();
+            return true;
+        }
+    }//pdao.createKendaraanByGolongan(0, rs.getString("plat_nomor"), golongan);
+
+    public boolean deleteParkir(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }//delete data berdasar id
+
+    public Object[] getParkirById(Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }//select data parkir berdasarkan id
+
+    public List<Object[]> getAllParkirAktif() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }//refresh data yg ter input???
+
+    public boolean insert(sistemparkir.model.Kendaraan kendaraan) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }//input data berdasar id
+
+    public boolean insertParkir(sistemparkir.model.Kendaraan kendaraan) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }//
+
+    public boolean updateKendaraan(sistemparkir.model.Kendaraan kendaraan) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }//
+
+    public double prosesKeluarParkir(Integer idParkir) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }//
     
     public class Kendaraan {
     private String jenis;
@@ -48,7 +91,7 @@ public abstract class ParkirDAO {
         }
 
         int tarifPerJam;
-        switch (knd.getJenis()) {
+        switch (knd.getjenis()) {
             case "motor":
                 tarifPerJam = 2000;
                 break;
@@ -66,5 +109,9 @@ public abstract class ParkirDAO {
 
         return tarifPerJam * lamaJam;
         }
+    
+    //public void getAllParkirAktif(){}
+    //public void createKendaraanByGolongan(){}
+    //public void getParkirById(id){}
     }
 }
